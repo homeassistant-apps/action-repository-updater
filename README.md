@@ -1,4 +1,4 @@
-# Community Home Assistant Add-ons Repository Updater
+# Unofficial Home Assistant Apps (Add-ons) Repository Updater
 
 [![PyPi Release][pypi-shield]][pypi]
 [![GitHub Activity][commits-shield]][commits]
@@ -10,12 +10,14 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
+🚀 GitHub Action for updating the app (add-on) repository.
+
 ## About
 
 Reads remote add-on repositories, determines versions and generates
 changelogs to update the add-on repository fully automated.
 
-Mainly used by the Community Home Assistant Add-ons project.
+Mainly used by the Unofficial Home Assistant Apps (Add-ons) project.
 
 Please note, this program cannot be used with the general documented
 Home Assistant add-on repository approach and only works in the setup where
@@ -26,7 +28,7 @@ each add-on has its own GitHub repository.
 Using pip, the Python package manager:
 
 ```bash
-pip install repository-updater
+pip install homeassistant-apps-repository-updater
 ```
 
 ## Usage
@@ -36,7 +38,7 @@ The Repository Updater is a pretty simple, straightforward CLI tool.
 ```txt
 Usage: repository-updater [OPTIONS]
 
-  Community Home Assistant Add-ons Repository Updater.
+  Unofficial Home Assistant Apps (Add-ons) Repository Updater.
 
 Options:
   --token <TOKEN>                 GitHub access token
@@ -58,14 +60,14 @@ can be quite useful when using this tool in a CI server like; Travis,
 CircleCI or GitLab CI.
 
 ```bash
-docker run -it --rm hassioaddons/repository-updater:latest
+docker run -it --rm homeassistant-apps/repository-updater:latest
 ```
 
 All the usage information parameters from the previous chapter apply.
 For example, this shows the current version of the tool:
 
 ```bash
-docker run -it --rm hassioaddons/repository-updater:latest --version
+docker run -it --rm homeassistant-apps/repository-updater:latest --version
 ```
 
 ## Using a GitHub Action
@@ -86,7 +88,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🚀 Run Repository Updater
-        uses: hassio-addons/repository-updater@v1
+        uses: homeassistant-apps/action-repository-updater@v1
         with:
           addon: ${{ github.event.client_payload.addon }}
           repository: ${{ github.repository }}
@@ -106,7 +108,7 @@ publish:
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.DISPATCH_TOKEN }}
-        repository: hassio-addons/repository
+        repository: homeassistant-apps/repository
         event-type: update
         client-payload: '{"addon": "my-addon"}'
 ```
@@ -131,17 +133,17 @@ which looks like this:
 channel: edge
 addons:
   example:
-    repository: hassio-addons/addon-example
+    repository: homeassistant-apps/app-example
     target: example
-    image: hassioaddons/example-{arch}
+    image: ghcr.io/homeassistant-apps/example-{arch}
   another:
-    repository: hassio-addons/addon-another
-    target: homebridge
-    image: ghcr.io/hassio-addons/test-{arch}
+    repository: homeassistant-apps/app-another
+    target: another
+    image: ghcr.io/homeassistant-apps/test-{arch}
   demo:
-    repository: hassio-addons/addon-demo
-    target: src
-    image: ghcr.io/hassio-addons/demo/{arch}
+    repository: homeassistant-apps/app-demo
+    target: demo
+    image: ghcr.io/homeassistant-apps/demo-{arch}
 ```
 
 The target in the add-ons repository is specified as the key for each add-on,
@@ -179,7 +181,7 @@ upon rendering your template.
 - **description**: The GitHub add-ons repository description
 - **homepage**: The GitHub add-ons repository specified homepage URL
 - **issues**: The URL to the issues listing of the GitHub add-ons repository
-- **name**: The full GitHub name, e.g., `hassio-addons/repository`
+- **name**: The full GitHub name, e.g., `homeassistant-apps/repository`
 - **repo**: The full URL to the GitHub add-ons repository
 
 In the above variables, a list of `addons` was specified. Each item in this
@@ -206,7 +208,7 @@ list contains the following variables:
 ## Examples
 
 It is quite a complex setup to create an example for in this little document.
-Nevertheless, see the [Community Home Assistant Addons Repository][repository]
+Nevertheless, see the [Unofficial Home Assistant Apps (Add-ons) Repository][repository]
 for an example of `.README.j2` and `.addons.yml` files.
 
 The community project also uses GitLab for building its add-ons. Each
@@ -314,22 +316,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/hassio-addons/repository-updater.svg
-[commits]: https://github.com/hassio-addons/repository-updater/commits/main
-[contributors]: https://github.com/hassio-addons/repository-updater/graphs/contributors
+[commits-shield]: https://img.shields.io/github/commit-activity/y/homeassistant-apps/action-repository-updater.svg
+[commits]: https://github.com/homeassistant-apps/action-repository-updater/commits/main
+[contributors]: https://github.com/homeassistant-apps/action-repository-updater/graphs/contributors
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg
 [discord]: https://discord.gg/c5DvZ4e
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
-[forum]: https://community.home-assistant.io?u=frenck
+[forum]: https://community.home-assistant.io
 [frenck]: https://github.com/frenck
-[issue]: https://github.com/hassio-addons/repository-updater/issues
-[license-shield]: https://img.shields.io/github/license/hassio-addons/repository-updater.svg
+[issue]: https://github.com/homeassistant-apps/action-repository-updater/issues
+[license-shield]: https://img.shields.io/github/license/homeassistant-apps/action-repository-updater.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
 [project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
-[pypi-shield]: https://img.shields.io/pypi/v/repository-updater.svg
-[pypi]: https://pypi.org/project/repository-updater
+[pypi-shield]: https://img.shields.io/pypi/v/homeassistant-apps-repository-updater.svg
+[pypi]: https://pypi.org/project/homeassistant-apps-repository-updater
 [reddit]: https://reddit.com/r/homeassistant
-[releases]: https://github.com/hassio-addons/repository-updater/releases
-[repository]: https://github.com/hassio-addons/repository
+[releases]: https://github.com/homeassistant-apps/action-repository-updater/releases
+[repository]: https://github.com/homeassistant-apps/repository
 [semver]: http://semver.org/spec/v2.0.0.html
 [token]: https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
