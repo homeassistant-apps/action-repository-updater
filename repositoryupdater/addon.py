@@ -169,14 +169,14 @@ class Addon:
 
         if current_parsed_version:
             try:
-                ref = self.addon_repository.get_git_ref("tags/" + self.current_version)
-            except UnknownObjectException:
                 ref = self.addon_repository.get_git_ref("tags/v" + self.current_version)
+            except UnknownObjectException:
+                ref = self.addon_repository.get_git_ref("tags/" + self.current_version)
             self.current_commit = self.addon_repository.get_commit(ref.object.sha)
         else:
             try:
                 self.current_commit = self.addon_repository.get_commit(
-                    f"v{self.current_version}"
+                    "v" + self.current_version
                 )
             except GithubException:
                 self.current_commit = self.addon_repository.get_commit(
@@ -192,10 +192,16 @@ class Addon:
         """Determine latest available add-on version and config."""
         for release in self.addon_repository.get_releases():
             self.latest_version = release.tag_name.lstrip("v")
+            def _is_prerelease(version: str) -> bool:
+                try:
+                    return semver.parse_version_info(version).prerelease is not None
+                except ValueError:
+                    return "-" in version
             prerelease = (
                 release.prerelease
-                or semver.parse_version_info(self.latest_version).prerelease
+                or _is_prerelease(self.latest_version)
             )
+
             if release.draft or (prerelease and channel != CHANNEL_BETA):
                 continue
             self.latest_release = release
@@ -451,9 +457,9 @@ class Addon:
 
         try:
             semver.parse(self.current_version)
-            data["version"] = "v%s" % self.current_version
+            data["version"] = "v" + self.current_version
         except ValueError:
-            data["version"] = self.current_version
+            data["version"] = "v" + self.current_version if "." in self.current_version else self.current_version
 
         data["commit"] = self.current_commit.sha
 
