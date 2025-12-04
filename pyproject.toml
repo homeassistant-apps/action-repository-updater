@@ -1,0 +1,56 @@
+[project]
+name = "homeassistant-apps-repository-updater"
+version = "1.4.0"
+description = "Unofficial Home Assistant Apps (Add-ons) Repository Updater"
+authors = [
+    {name = "Franck Nijhof", email = "frenck@addons.community"},
+    {name = "Laszlo Magyar", email = "lmagyar1973@gmail.com"},
+]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/homeassistant-apps/action-repository-updater"
+keywords=[
+    "addons",
+    "repository",
+    "home assistant",
+    "home-assistant",
+    "add-ons",
+    "frenck",
+]
+classifiers=[
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.12"
+dependencies = [
+    "click (==8.3.1)",
+    "crayons (==0.4.0)",
+    "emoji (==2.15.0)",
+    "gitpython (==3.1.45)",
+    "jinja2 (==3.1.6)",
+    "pygithub (==2.8.1)",
+    "python-dateutil (==2.9.0.post0)",
+    "pyyaml (==6.0.3)",
+    "semver (==3.0.4)",
+    "importlib (>=1.0.4,<2.0.0)"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/homeassistant-apps/action-repository-updater"
+
+[project.scripts]
+repository-updater = "repositoryupdater.cli:repository_updater"
+repository-updater-git-askpass = "repositoryupdater.cli:git_askpass"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+packages = [{include = "repositoryupdater"}]
