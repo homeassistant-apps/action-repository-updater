@@ -112,7 +112,7 @@ class Addon:
             sys.exit(1)
 
         self.current_version = self.latest_version
-        self.current_release = self.latest_release
+        self.current_release = self.latest_release if self.latest_is_release else None
         self.current_commit = self.latest_commit
 
         self.clone_repository()
@@ -346,9 +346,9 @@ class Addon:
             changelog = self.current_release.body
         elif self.latest_release:
             compare = self.addon_repository.compare(
-                self.current_release.tag_name, self.current_commit.sha
+                self.latest_release.tag_name, self.current_commit.sha
             )
-            changelog = "# Changelog since %s\n" % self.current_release.tag_name
+            changelog = "# Changelog since %s\n" % self.latest_release.tag_name
             for commit in reversed(compare.commits):
                 changelog += "- %s \n" % (commit.commit.message)
         else:
