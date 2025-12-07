@@ -375,6 +375,7 @@ class Addon:
         self.update_static("DOCS.md")
         self.update_static("apparmor.txt")
         self.update_static("translations")
+        self.update_static("transfer.yaml")
 
     def update_static(self, file):
         """Download latest static file/directory from add-on repository."""
