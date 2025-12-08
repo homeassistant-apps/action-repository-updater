@@ -207,5 +207,7 @@ class Repository:
     def cleanup(self):
         """Cleanup after you leave."""
         click.echo("Cleanup...", nl=False)
+        for addon in self.addons:
+            addon.cleanup()
         shutil.rmtree(self.git_repo.working_dir, True)
         click.echo(crayons.green("Done"))
