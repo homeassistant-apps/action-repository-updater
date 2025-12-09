@@ -19,7 +19,7 @@ RUN \
         --no-cache \
         wnx/changelog-updater
 
-ENV PATH="/root/.config/composer/vendor/bin:$PATH"
+ENV PATH="/root/.composer/vendor/bin:$PATH"
 
 # Entrypoint
 ENTRYPOINT ["repository-updater"]
