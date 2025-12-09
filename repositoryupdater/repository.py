@@ -12,11 +12,11 @@ from typing import List
 
 import click
 import crayons
-import yaml
 from git import Repo
 from github.GithubException import UnknownObjectException
 from github.Repository import Repository as GitHubRepository
 from jinja2 import Environment, FileSystemLoader
+from ruamel.yaml import YAML, RoundTripLoader
 
 from .addon import Addon
 from .const import CHANNELS
@@ -110,7 +110,7 @@ class Repository:
             )
             sys.exit(1)
 
-        config = yaml.safe_load(config.decoded_content)
+        config = YAML(typ=['rt', 'safe'], pure=True).load(config.decoded_content)
         click.echo(crayons.green("Loaded!"))
 
         if config["channel"] not in CHANNELS:

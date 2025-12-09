@@ -19,13 +19,13 @@ import click
 import crayons
 import emoji
 import semver
-import yaml
 from git import Repo
 from github.Commit import Commit
 from github.GithubException import GithubException, UnknownObjectException
 from github.GitRelease import GitRelease
 from github.Repository import Repository
 from jinja2 import BaseLoader, Environment
+from ruamel.yaml import YAML
 
 from repositoryupdater.github import GitHub
 
@@ -157,7 +157,7 @@ class Addon:
             current_config = (
                 json.load(f)
                 if self.existing_config_filename.endswith(".json")
-                else yaml.safe_load(f)
+                else YAML(typ=['rt', 'safe'], pure=True).load(f)
             )
 
         self.current_version = current_config["version"]
@@ -261,7 +261,7 @@ class Addon:
         latest_config = (
             json.loads(latest_config_file.decoded_content)
             if config_file.endswith(".json")
-            else yaml.safe_load(latest_config_file.decoded_content)
+            else YAML(typ=['rt', 'safe'], pure=True).load(latest_config_file.decoded_content)
         )
 
         self.name = latest_config["name"]
@@ -317,7 +317,7 @@ class Addon:
             encoding="utf8",
         ) as f:
             config = (
-                json.load(f) if config_file.endswith(".json") else yaml.safe_load(f)
+                json.load(f) if config_file.endswith(".json") else YAML(typ=['rt', 'safe'], pure=True).load(f)
             )
 
         config["version"] = self.current_version
@@ -351,7 +351,9 @@ class Addon:
                     separators=(",", ": "),
                 )
             else:
-                yaml.dump(config, outfile, default_flow_style=False, sort_keys=False)
+                yaml = YAML(typ=['rt', 'safe'], pure=True)
+                yaml.default_flow_style = False
+                yaml.dump(config, outfile)
 
         click.echo(crayons.green("Done"))
 
