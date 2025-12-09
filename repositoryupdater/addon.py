@@ -9,6 +9,7 @@ import json
 import os
 import sys
 import tempfile
+from pathlib import PurePosixPath
 from shutil import copyfile, copytree, rmtree
 
 import click
@@ -230,7 +231,7 @@ class Addon:
         for config_file in config_files:
             try:
                 latest_config_file = self.addon_repository.get_contents(
-                    os.path.join(self.addon_target, config_file), self.latest_commit.sha
+                    str(PurePosixPath(self.addon_target, config_file)), self.latest_commit.sha
                 )
                 break
             except UnknownObjectException:
