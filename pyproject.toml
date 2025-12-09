@@ -1,6 +1,6 @@
 [project]
 name = "homeassistant-apps-repository-updater"
-version = "1.4.0"
+version = "1.4.1"
 description = "Unofficial Home Assistant Apps (Add-ons) Repository Updater"
 authors = [
     {name = "Franck Nijhof", email = "frenck@addons.community"},

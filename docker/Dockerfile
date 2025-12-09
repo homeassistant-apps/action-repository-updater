@@ -12,7 +12,7 @@ RUN \
     && pip3 install \
         --no-cache-dir \
         --prefer-binary \
-        homeassistant-apps-repository-updater==1.4.0 \
+        homeassistant-apps-repository-updater==1.4.1 \
     \
     && composer global require \
         --no-interaction \
