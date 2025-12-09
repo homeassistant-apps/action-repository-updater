@@ -106,16 +106,9 @@ class Repository:
         except UnknownObjectException:
             print(
                 "Seems like the repository does not contain an "
-                ".addons.yml file, falling back to legacy file."
+                ".addons.yml file."
             )
-            try:
-                config = self.github_repository.get_contents(".hassio-addons.yml")
-            except UnknownObjectException:
-                print(
-                    "Seems like the repository does not contain an "
-                    ".hassio-addons.yml file either."
-                )
-                sys.exit(1)
+            sys.exit(1)
 
         config = yaml.safe_load(config.decoded_content)
         click.echo(crayons.green("Loaded!"))
