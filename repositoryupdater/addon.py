@@ -205,6 +205,10 @@ class Addon:
             ref = self.addon_repository.get_git_ref(
                 "tags/" + self.latest_release.tag_name
             )
+            if ref.object.type == "tag":
+                ref = self.addon_repository.get_git_tag(
+                    ref.object.sha
+                )
             self.latest_commit = self.addon_repository.get_commit(ref.object.sha)
 
         if channel == CHANNEL_EDGE:
