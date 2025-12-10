@@ -47,6 +47,7 @@ class Addon:
     existing_config_filename: str | None = None
     latest_version: str
     latest_release: GitRelease
+    latest_draft: GitRelease
     latest_is_release: bool
     latest_commit: Commit
     up_to_date: bool
@@ -83,6 +84,7 @@ class Addon:
         self.channel = channel
         self.current_version = None
         self.latest_release = None
+        self.latest_draft = None
         self.latest_commit = None
         self.up_to_date = True
 
@@ -209,7 +211,11 @@ class Addon:
                 or _is_prerelease(self.latest_version)
             )
 
-            if release.draft or (prerelease and channel != CHANNEL_BETA):
+            if (release.draft and channel != CHANNEL_EDGE) or (prerelease and channel != CHANNEL_BETA):
+                continue
+            if (release.draft):
+                if not self.latest_draft:
+                    self.latest_draft = release
                 continue
             self.latest_release = release
             break
@@ -390,11 +396,18 @@ class Addon:
                 click.echo(result.stdout.decode())
                 sys.exit(1)
 
-        def __update_changelog(release: GitRelease):
+        def __update_changelog_with_release(release: GitRelease):
             __changelog_updater([
                 f"--latest-version={release.tag_name.lstrip("v")}",
                 f"--release-date={__published_at_formatted(release)}",
                 f"--release-notes={emoji.emojize(release.body, language="alias")}",
+            ])
+
+        def __update_changelog_with_draft(release: GitRelease, draft: GitRelease):
+            __changelog_updater([
+                f"--latest-version=Unreleased changes since {release.tag_name.lstrip("v")}",
+                f"--release-date={__published_at_formatted(release)}",
+                f"--release-notes={emoji.emojize(draft.body, language="alias")}",
             ])
 
         def __write_changelog(changelog: str, append: bool = False):
@@ -437,7 +450,7 @@ class Addon:
             else:
                 if not changelog_exists:
                     __write_changelog(Addon.CHANGELOG_HEADER)
-                __update_changelog(self.current_release)
+                __update_changelog_with_release(self.current_release)
                 # The changelog-updater's AST removes comments (like SU's HTML renderer will),
                 # so we need to add them back again
                 __write_changelog(
@@ -452,11 +465,20 @@ class Addon:
             # copy the release notes as-is to the changelog
             # Note: there is no history like on the stable channel
             __write_changelog(Addon.CHANGELOG_HEADER)
-            __update_changelog(self.current_release)
+            __update_changelog_with_release(self.current_release)
+        elif self.latest_release and self.latest_draft:
+            # On the edge channel in case of a new commit (merged PR),
+            # when there is a draft release available,
+            # copy the draft release notes as-is to the changelog
+            # Note: there is no history like on the stable channel
+            __write_changelog(Addon.CHANGELOG_HEADER)
+            __update_changelog_with_draft(self.latest_release, self.latest_draft)
         else:
             changelog = ""
             if self.latest_release:
                 # On the edge channel in case of a new commit (merged PR),
+                # when there is no draft release available,
+                # but there is a latest release,
                 # collect the commit messages since the latest release
                 changelog = Addon.CHANGELOG_HEADER
                 changelog += f"## Unreleased changes since {self.latest_release.tag_name.lstrip("v")} - {__published_at_formatted(self.latest_release)}\n\n"
